@@ -27,8 +27,33 @@ class UserProductScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Center(child: Text('UserProductScreen')),
       drawer: AppDrawer(),
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (ctx, AsyncSnapshot snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? Center(child: CircularProgressIndicator())
+                : RefreshIndicator(
+                    child: Consumer<Products>(
+                      builder: (ctx, productsData, _) => Padding(
+                        padding: EdgeInsets.all(8),
+                        child: ListView.builder(
+                            itemCount: productsData.items.length,
+                            itemBuilder: (_, int index) => Column(
+                                  children: [
+                                    UserProductItem(
+                                      productsData.items[index].id,
+                                      productsData.items[index].title,
+                                      productsData.items[index].imageUrl,
+                                    ),
+                                    Divider(),
+                                  ],
+                                )),
+                      ),
+                    ),
+                    onRefresh: () => _refreshProducts(context),
+                  ),
+      ),
     );
   }
 }
