@@ -37,12 +37,16 @@ class Auth with ChangeNotifier {
     // url bta3 login w signup f url wa7eed
 
     try {
-      final res = await http.post(url,
-          body: json.encode({
+      final res = await http.post(
+        url,
+        body: json.encode(
+          {
             'email': email,
             'password': password,
             'returnSecureToken': true,
-          }));
+          },
+        ),
+      );
       final responseData = json.decode(res.body);
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);

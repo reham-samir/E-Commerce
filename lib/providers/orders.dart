@@ -23,15 +23,15 @@ class Orders with ChangeNotifier {
   String authToken;
   String userId;
 
-  getData(String authToken, String uId, List<OrderItem> orders) {
-    authToken = authToken;
+  getData(String token, String uId, List<OrderItem> orders) {
+    this.authToken = token;
     userId = uId;
     _orders = orders;
     notifyListeners();
   }
 
   List<OrderItem> get orders {
-    return [..._orders];
+    return _orders;
   }
 
   Future<void> fetchAndSetOrders() async {
@@ -40,7 +40,9 @@ class Orders with ChangeNotifier {
         'https://e-commerce-e14cd-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
 
     try {
-      final res = await http.get(url);
+      final res = await http.get(
+        url,
+      );
 
       // to get data.
       final extractedData = json.decode(res.body) as Map<String, dynamic>;
@@ -57,12 +59,14 @@ class Orders with ChangeNotifier {
             amount: orderData['amount'],
             dataTime: DateTime.parse(orderData['dataTime']),
             products: (orderData['products'] as List<dynamic>)
-                .map((item) => CartItem(
-                      id: item['id'],
-                      price: item['price'],
-                      quntity: item['quntity'],
-                      title: item['title'],
-                    ))
+                .map(
+                  (item) => CartItem(
+                    id: item['id'],
+                    price: item['price'],
+                    quntity: item['quntity'],
+                    title: item['title'],
+                  ),
+                )
                 .toList(),
           ),
         );

@@ -86,7 +86,7 @@ enum AuthMode { Login, SignUp }
 
 class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  final _formKey = GlobalKey<FormState>();
   AuthMode _authMode = AuthMode.Login;
 
   Map<String, String> _authData = {
